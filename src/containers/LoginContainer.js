@@ -1,36 +1,37 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter, Redirect } from 'react-router';
 
-import { authenticate } from '../actions';
+import { login } from '../actions';
 import Login from '../components/Login'; 
 
-const LoginContainer = ({ history, isLoggedIn, onLogin }) => {
+const LoginContainer = ({ isLoggedIn, isAuthenticateFail, onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   if (isLoggedIn) {
-    history.push('/');
-    return null;
+    return <Redirect to='/' />;
   }
 
   return (
     <Login
       onChangeUsername={e => setUsername(e.target.value)}
       onChangePassword={e => setPassword(e.target.value)}
-      onLogin={e => onLogin(e, username, password)} 
+      onLogin={e => onLogin(e, username, password)}
+      isAuthenticateFail={isAuthenticateFail}
     />
   );
 };
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.isLoggedIn
+  isLoggedIn: state.isLoggedIn,
+  isAuthenticateFail: state.isAuthenticateFail
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   onLogin: (event, username, password) => {
     event.preventDefault();
-    dispatch(authenticate(username, password));
+    dispatch(login(username, password));
     ownProps.history.push('/');
   }
 });

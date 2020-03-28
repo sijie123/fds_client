@@ -1,24 +1,21 @@
 import React from 'react';
 import { Card, CardGroup } from 'react-bootstrap';
-import { FaStar } from 'react-icons/fa';
 
-import FoodCard from './FoodCard';
+import FoodCard from '../components/FoodCard';
 
 import '../stylesheets/style.css';
 
-const Restaurant = ({ restaurant }) => (
-  <div className="page restaurant">
+const Restaurant = ({ restaurant, food, onAddToCart }) => (
+  <div className="page">
     <Card>
-      <Card.Img className="restaurantImage" variant="top" src={restaurant.img} fluid="true" />
+    <Card.Img className="restaurantImage" variant="top" src={require("../images/food.jpg")} fluid="true" />
       <Card.ImgOverlay className="restaurantInfo">
-        <Card.Title>{restaurant.title}</Card.Title>
-        <Card.Text className="restaurantRating">
-          <FaStar className="starIcon" />{restaurant.rating}
-        </Card.Text>
+        <Card.Title>{restaurant.name}</Card.Title>
+        <Card.Text>{restaurant.location}</Card.Text>
       </Card.ImgOverlay>
     </Card>
-    <CardGroup className="restaurantMenu">
-      {restaurant.menu.map((m, key) => <FoodCard key={restaurant.id + key} food={m} />)}
+    <CardGroup className="verticalList">
+      {food.map((f, key) => <FoodCard key={'f_' + key} food={f} onAddToCart={e => onAddToCart(e, restaurant.name, f.fname)} />)}
     </CardGroup>
   </div>
 );

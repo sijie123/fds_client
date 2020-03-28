@@ -33,9 +33,9 @@ html, body, #root {
 }
 
 .home {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  display: grid;
+  justify-content: center;
+  grid-template-columns: repeat(auto-fill, 300px);
 }
 
 .authenticate {
@@ -43,6 +43,11 @@ html, body, #root {
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.authenticateFailure {
+  color: red;
+  font-size: 14px;
 }
 
 .title {
@@ -56,23 +61,12 @@ html, body, #root {
   font-weight: bolder;
 }
 
-.loginButton {
-  flex:;
-  align-self: center;
-}
-
 .restaurantCard {
-  min-width: 16em;
-  flex: 1;
   margin: 1rem;
 }
 
-.restaurantCategory {
+.greyText {
   color: rgba(0,0,0,.5);
-}
-
-.restaurant {
-  overflow: hidden;
 }
 
 .restaurantImage {
@@ -98,30 +92,67 @@ html, body, #root {
   margin-right: .2rem;
 }
 
-.restaurantMenu {
+.verticalList {
   flex-direction: column;
 }
 
-.foodCard {
+.horizontalCard {
   display: flex;
   flex-direction: row;
 }
 
 .foodImage {
-  max-width: 15rem;
-  max-height: 15rem;
+  max-width: 10rem;
+  max-height: 10rem;
 }
 
-.foodCardBody {
+.horizontalCardBody {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-.addToCartButton {
+.marginBottomZero {
+  margin-bottom: 0;
+}
+
+.actionButton {
   width: 5rem;
 }
 
-.addToCartIcon {
+.faIcon {
   font-size: 1.5rem;
+}
+
+.errorModal {
+  background-color: rgb(248, 215, 218);
+}
+
+.successModal {
+  background-color: #d4edda;
+}
+
+.categoriesModal {
+  background-color: #f8f9fa;
+}
+
+.horizontalMargin {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.leftVerticalMargin {
+  margin: 1rem 0 1rem 1rem;
+}
+
+.topMargin {
+  margin-top: 1rem;
+}
+
+.searchBar {
+  margin: 1.5rem;
+}
+
+.form-control:focus, .btn:focus {
+  box-shadow: none;
 }
