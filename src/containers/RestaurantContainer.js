@@ -46,7 +46,7 @@ class RestaurantContainer extends React.Component {
       if (this.props.currentRestaurant === '') {
         this.props.onSetCurrentRestaurant(restaurant);
       }
-      this.props.onAddToCart(food);
+      this.props.onAddToCart(food.fname, food.price);
       this.setState({
         showSuccess: true        
       });
@@ -82,8 +82,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onAddToCart: item => {
-    dispatch(addToCart(item));
+  onAddToCart: (itemName, itemPrice) => {
+    dispatch(addToCart(itemName, itemPrice));
   },
   onSetCurrentRestaurant: restaurant => {
     dispatch(setCurrentRestaurant(restaurant));

@@ -132,17 +132,26 @@ html, body, #root {
   background-color: #d4edda;
 }
 
-.categoriesModal {
+.updateModal {
   background-color: #f8f9fa;
 }
 
 .horizontalMargin {
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-left: 3em;
+  margin-right: 3em;
 }
 
-.leftVerticalMargin {
-  margin: 1rem 0 1rem 1rem;
+.allMargin {
+  margin: 2rem 3rem 2rem 3rem;
+}
+
+.noTopMargin {
+  margin: 0 3rem 2rem 3rem;
+}
+
+
+.leftMargin {
+  margin-left: 1rem;
 }
 
 .topMargin {

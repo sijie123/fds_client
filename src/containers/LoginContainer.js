@@ -5,7 +5,7 @@ import { withRouter, Redirect } from 'react-router';
 import { login } from '../actions';
 import Login from '../components/Login'; 
 
-const LoginContainer = ({ isLoggedIn, isAuthenticateFail, onLogin }) => {
+const LoginContainer = ({ isLoggedIn, authenticateFail, onLogin }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -18,14 +18,14 @@ const LoginContainer = ({ isLoggedIn, isAuthenticateFail, onLogin }) => {
       onChangeUsername={e => setUsername(e.target.value)}
       onChangePassword={e => setPassword(e.target.value)}
       onLogin={e => onLogin(e, username, password)}
-      isAuthenticateFail={isAuthenticateFail}
+      isAuthenticateFail={authenticateFail === 'login'}
     />
   );
 };
 
 const mapStateToProps = state => ({
   isLoggedIn: state.isLoggedIn,
-  isAuthenticateFail: state.isAuthenticateFail
+  authenticateFail: state.authenticateFail
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

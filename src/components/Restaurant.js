@@ -15,7 +15,7 @@ const Restaurant = ({ restaurant, food, onAddToCart }) => (
       </Card.ImgOverlay>
     </Card>
     <CardGroup className="verticalList">
-      {food.map((f, key) => <FoodCard key={'f_' + key} food={f} onAddToCart={e => onAddToCart(e, restaurant.name, f.fname)} />)}
+      {food.map((f, key) => <FoodCard key={'f_' + key} food={f} onAddToCart={e => onAddToCart(e, restaurant.name, f)} />)}
     </CardGroup>
   </div>
 );

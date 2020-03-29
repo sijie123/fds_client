@@ -7,14 +7,19 @@ export const ADD_TO_CART = 'ADD_TO_CART';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const CLEAR_CART = 'CLEAR_CART';
 export const SET_CURRENT_RESTAURANT = 'SET_CURRENT_RESTAURANT';
+export const SET_CARDNUMBER = 'SET_CARDNUMBER';
+export const SET_CURRENT_ORDER = 'SET_CURRENT_ORDER';
 
-const authenticate = username => ({
+const authenticate = (username, rewardpoints=0, cardnumber=null) => ({
   type: AUTHENTICATE,
-  username: username
+  username: username,
+  rewardpoints: rewardpoints,
+  cardnumber: cardnumber
 });
 
-const authenticateFail = () => ({
-  type: AUTHENTICATE_FAIL
+const authenticateFail = failure => ({
+  type: AUTHENTICATE_FAIL,
+  failure: failure
 });
 
 export const logout = () => ({ 
@@ -36,7 +41,7 @@ export const signup = (username, password) => {
       .then(res => res.json())
       .then(data => {
         if ("errors" in data) {
-          return dispatch(authenticateFail());
+          return dispatch(authenticateFail('signup'));
         } else {
           return dispatch(authenticate(data.username));
         }
@@ -46,7 +51,7 @@ export const signup = (username, password) => {
 
 export const login = (username, password) => {
   return dispatch => {
-    return fetch('http://54.169.81.205:3001/customer/login', {
+    return fetch('http://54.169.81.205:3001/customer/testlogin', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -59,9 +64,9 @@ export const login = (username, password) => {
       .then(res => res.json())
       .then(data => {
         if ("errors" in data) {
-          return dispatch(authenticateFail());
+          return dispatch(authenticateFail('login'));
         } else {
-          return dispatch(authenticate(data.username));
+          return dispatch(authenticate(data.username, data.rewardpoints, data.cardnumber));
         }
       });
   }
@@ -104,14 +109,15 @@ export const fetchRestaurants = () => {
   }
 }
 
-export const addToCart = item => ({
+export const addToCart = (itemName, itemPrice) => ({
   type: ADD_TO_CART,
-  item: item,
+  itemName: itemName,
+  itemPrice: itemPrice
 });
 
-export const removeFromCart = item => ({
+export const removeFromCart = itemName => ({
   type: REMOVE_FROM_CART,
-  item: item
+  itemName: itemName
 });
 
 export const clearCart = () => ({
@@ -122,3 +128,51 @@ export const setCurrentRestaurant = restaurant => ({
   type: SET_CURRENT_RESTAURANT,
   restaurant: restaurant
 });
+
+const setCardnumber = cardnumber => ({
+  type: SET_CARDNUMBER,
+  cardnumber: cardnumber
+});
+
+export const updateCardnumber = (username, cardnumber) => {
+  return dispatch => {
+    return fetch('http://54.169.81.205:3001/customer/testcard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: username,
+          cardnumber: cardnumber
+        })
+      })
+      .then(res => res.json())
+      .then(data => dispatch(setCardnumber(data.cardnumber)));
+  }
+}
+
+const setCurrentOrder = order => ({
+  type: SET_CURRENT_ORDER,
+  order: order
+});
+
+export const placeOrder = (cart, restaurant, totalPrice, paymentmethod, address) => {
+  return dispatch => {
+    return fetch('http://54.169.81.205:3001/order', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          deliverylocation: address,
+          paymentmethod: paymentmethod,
+          restaurantname: restaurant,
+          foodorder: cart
+        })
+      })
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .then(() => dispatch(setCurrentOrder({ cart, restaurant, totalPrice, paymentmethod, address })));
+  }
+}

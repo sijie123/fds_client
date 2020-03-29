@@ -45,17 +45,22 @@ const HomeContainer = ({ categories, restaurants }) => {
       })
       .then(() => setShowCategories(false));
     } else {
-      setFilteredRestaurants(restaurants);
-      onSearch(restaurants);
-      setShowCategories(false);
+      onCancel();
     }
+  }
+
+  const onCancel = () => {
+    setSelectedCategories([]);
+    setFilteredRestaurants(restaurants);
+    onSearch(restaurants);
+    setShowCategories(false);
   }
 
   return (
     <div>
-      <Modal centered show={showCategories} backdrop="static" onHide={() => setShowCategories(false)}>
-        <Modal.Header className="categoriesModal">Categories</Modal.Header>
-        <Form className="leftVerticalMargin">
+      <Modal centered show={showCategories} backdrop="static">
+        <Modal.Header className="updateModal">Categories</Modal.Header>
+        <Form className="allMargin">
           {categories.map(c => 
             <Form.Check
               checked={selectedCategories.includes(c)}
@@ -67,6 +72,7 @@ const HomeContainer = ({ categories, restaurants }) => {
             />
           )}
           <Button className="topMargin" variant="success" onClick={onFilterByCategories}>Filter</Button>
+          <Button className="topMargin leftMargin" variant="danger" onClick={onCancel}>Cancel</Button>
         </Form>
       </Modal>
       <Home

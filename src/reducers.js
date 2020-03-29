@@ -10,42 +10,50 @@ import {
   ADD_TO_CART,
   REMOVE_FROM_CART,
   CLEAR_CART,
-  SET_CURRENT_RESTAURANT
+  SET_CURRENT_RESTAURANT,
+  SET_CARDNUMBER,
+  SET_CURRENT_ORDER
 } from './actions';
 
 const persistConfig = {
   key: 'root',
   storage: storage,
-  whitelist: ['isLoggedIn', 'categories', 'restaurants', 'cart', 'currentRestaurant']
+  whitelist: ['isLoggedIn', 'user', 'categories', 'restaurants', 'cart', 'currentRestaurant', 'order']
 }
 
 const initialState = {
   isLoggedIn: false,
-  isAuthenticateFail: false,
+  authenticateFail: '',
+  user: {},
   categories: [],
   restaurants: [],
   cart: {},
   currentRestaurant: ''
 };
 
-const authentication = (state = initialState, action) => {
+const reducers = (state = initialState, action) => {
   switch (action.type) {
     case AUTHENTICATE:
       return {
         ...state,
         isLoggedIn: true,
-        isAuthenticateFail: false,
-        username: action.username
+        authenticateFail: '',
+        user: {
+          username: action.username,
+          rewardpoints: action.rewardpoints,
+          cardnumber: action.cardnumber
+        }
       };
     case AUTHENTICATE_FAIL:
       return {
         ...state,
-        isAuthenticateFail: true
+        authenticateFail: action.failure
       };
     case LOGOUT:
       return {
         ...state,
-        isLoggedIn: false
+        isLoggedIn: false,
+        user: {}
       };
     case SET_CATEGORIES:
       return {
@@ -58,19 +66,23 @@ const authentication = (state = initialState, action) => {
         restaurants: action.restaurants
       };
     case ADD_TO_CART:
-      const name = action.item;
-      const quantity_add = name in state.cart ? state.cart[name] + 1 : 1;
+      const name = action.itemName;
+      const quantity_add = name in state.cart ? state.cart[name].quantity + 1 : 1;
       return {
         ...state,
         cart: {
           ...state.cart,
-          [name]: quantity_add
+          [name]: {
+            quantity: quantity_add,
+            base_price: action.itemPrice
+          }
         }
       };
     case REMOVE_FROM_CART:
-      const quantity_remove = state.cart[action.item];
+      const quantity_remove = state.cart[action.itemName].quantity;
+      const price = state.cart[action.itemName].base_price;
       if (quantity_remove === 1) {
-        const {[action.item]: quantity_remove, ...others} = state.cart;
+        const {[action.itemName]: { quantity: quantity_remove, base_price: price }, ...others} = state.cart;
         if (Object.keys(others).length === 0) {
           return {
               ...state,
@@ -87,7 +99,10 @@ const authentication = (state = initialState, action) => {
           ...state,
           cart: {
             ...state.cart,
-            [action.item]: quantity_remove - 1
+            [action.itemName]: {
+              quantity: quantity_remove - 1,
+              base_price: price
+            }
           }
         };
       }
@@ -102,11 +117,24 @@ const authentication = (state = initialState, action) => {
         ...state,
         currentRestaurant: action.restaurant
       };
+    case SET_CARDNUMBER:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          cardnumber: action.cardnumber
+        }
+      };
+    case SET_CURRENT_ORDER:
+      return {
+        ...state,
+        cart: {},
+        currentRestaurant: '',
+        order: action.order
+      };
     default:
       return state;
   }
 };
-
-const reducers = authentication;
 
 export default persistReducer(persistConfig, reducers);

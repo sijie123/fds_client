@@ -8,6 +8,7 @@ import Header from './components/Header';
 import CartContainer from './containers/CartContainer';
 import HomeContainer from './containers/HomeContainer';
 import LoginContainer from './containers/LoginContainer';
+import ProfileContainer from './containers/ProfileContainer';
 import RestaurantContainer from './containers/RestaurantContainer';
 import SignupContainer from './containers/SignupContainer';
 
@@ -34,6 +35,7 @@ class App extends React.Component {
             <Route path='/signup' component={SignupContainer} />
             <Route exact path='/r/:id' component={RestaurantContainer} />
             <Route path='/cart' component={CartContainer} />
+            <Route path='/profile' component={ProfileContainer} />
           </Switch>
         </div>
       </BrowserRouter>
