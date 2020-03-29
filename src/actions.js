@@ -30,6 +30,7 @@ export const signup = (username, password) => {
   return dispatch => {
     return fetch('http://54.169.81.205:3001/customer/new', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -53,6 +54,7 @@ export const login = (username, password) => {
   return dispatch => {
     return fetch('http://54.169.81.205:3001/customer/testlogin', {
         method: 'POST',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -160,7 +162,7 @@ export const placeOrder = (cart, restaurant, totalPrice, paymentmethod, address)
   return dispatch => {
     return fetch('http://54.169.81.205:3001/order', {
         method: 'POST',
-        credentials: 'same-origin',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },

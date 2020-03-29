@@ -53,7 +53,9 @@ const reducers = (state = initialState, action) => {
       return {
         ...state,
         isLoggedIn: false,
-        user: {}
+        user: {},
+        cart: {},
+        currentRestaurant: ''
       };
     case SET_CATEGORIES:
       return {
