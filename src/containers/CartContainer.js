@@ -1,16 +1,103 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
 import { removeFromCart, clearCart, placeOrder } from '../actions';
 
-import Cart from '../components/Cart'; 
+import Cart from '../components/Cart';
+
+import config from "../config";
 
 const CartContainer = ({ cardnumber, restaurants, cart, currentRestaurant, onRemoveFromCart, onClearCart, onPlaceOrder }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [paymentmethod, setPaymentMethod] = useState('CASH');
   const [address, setAddress] = useState('');
+  const [selectedPromo, setSelectedPromo] = useState('');
+  const [options, setOptions] = useState(new Set());
+  const [isHistoryFetched, setIsHistoryFetched] = useState(false);
+  const [isLocationsFetched, setIsLocationsFetched] = useState(false);
+  const [promos, setPromos] = useState([]);
+  const [isPromosFetched, setIsPromosFetched] = useState(false);
+  const [useRewardPoints, setRewardPoints] = useState(false);
+
+  useEffect(() => {
+    if (!isHistoryFetched) {
+      fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/customer/addresses`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.locations !== null && data.locations !== undefined) {
+          let _options = options;
+
+          for (let i = 0; i < data.locations.length; i++) {
+            if (_options.has(data.locations[i])) {
+              _options.delete(data.locations[i])
+            }
+
+            _options.add(data.locations[i] + '$');
+          }
+
+          setOptions(_options);
+          setIsHistoryFetched(true);
+        }
+      });
+    }
+
+    if (!isLocationsFetched) {
+      fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/misc/locations`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.locations !== null && data.locations !== undefined) {
+          let _options = options;
+
+          for (let i = 0; i < data.locations.length; i++) {
+            if (_options.has(data.locations[i] + '$')) {
+              continue;
+            }
+
+            _options.add(data.locations[i]);
+          }
+
+          setOptions(_options);
+          setIsLocationsFetched(true);
+        }
+      });
+    }
+
+    if (!isPromosFetched) {
+      fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/misc/promotions`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        let _promos = [];
+        for (let k in data) {
+            if (k === 'status') {
+                continue;
+            }
+            _promos.push(data[k].code);
+        }
+        setPromos(_promos);
+        setIsPromosFetched(true);
+      });
+    }
+  });
 
   const onOrder = (event, totalPrice) => {
     event.preventDefault();
@@ -32,12 +119,18 @@ const CartContainer = ({ cardnumber, restaurants, cart, currentRestaurant, onRem
       for (let c in cart) {
         cartorder[c] = cart[c].quantity;
       }
-      console.log(cartorder);
-      onPlaceOrder(cartorder, currentRestaurant, totalPrice, paymentmethod, address);
-      setShowSuccess(true);
-      setErrorMsg('');
-      setPaymentMethod('');
-      setAddress('');
+      onPlaceOrder(cartorder, currentRestaurant, totalPrice, paymentmethod, address, selectedPromo, useRewardPoints);
+
+      if (currentRestaurant === '') {
+        setShowSuccess(true);
+        setErrorMsg('');
+        setPaymentMethod('');
+        setAddress('');
+        setSelectedPromo('');
+        setRewardPoints(false);
+      } else {
+        setErrorMsg('Delivery currently unavailable.');
+      }
     }
   }
 
@@ -56,10 +149,15 @@ const CartContainer = ({ cardnumber, restaurants, cart, currentRestaurant, onRem
         cart={cart}
         restaurant={currentRestaurant}
         totalPrice={Object.keys(cart).reduce((acc, c) => acc + parseFloat(cart[c].base_price.substr(1)) * cart[c].quantity, 0)}
+        options={options}
+        promos={promos}
+        useRewardPoints={useRewardPoints}
         onClearCart={onClearCart}
         onRemoveFromCart={onRemoveFromCart}
         onSetPaymentMethod={e => setPaymentMethod(e.target.value)}
         onSetAddress={e => setAddress(e.target.value)}
+        onSetPromo={e => setSelectedPromo(e.target.value)}
+        onToggleRewardPoints={() => useRewardPoints ? setRewardPoints(false) : setRewardPoints(true)}
         onOrder={onOrder}
       />
     </div>

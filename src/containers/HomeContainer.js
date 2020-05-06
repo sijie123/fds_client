@@ -4,6 +4,8 @@ import { Button, Form, Modal } from 'react-bootstrap';
 
 import Home from '../components/Home'; 
 
+import config from "../config.js";
+
 const HomeContainer = ({ categories, restaurants }) => {
   const [keyword, setKeyword] = useState("");
   const [localRestaurants, setLocalRestaurants] = useState(restaurants);
@@ -29,7 +31,7 @@ const HomeContainer = ({ categories, restaurants }) => {
 
   const onFilterByCategories = () => {
     if (selectedCategories.length !== 0) {
-      fetch('http://54.169.81.205:3001/category/', {
+      fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/category/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -1,20 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button, Form, Modal } from 'react-bootstrap';
 
-import { updateCardnumber } from '../actions';
+import { setProfile, updateCardnumber } from '../actions';
 
-import Profile from '../components/Profile'; 
+import Profile from '../components/Profile';
 
-const ProfileContainer = ({ username, rewardpoints, cardnumber, onUpdateCardnumber }) => {
+import config from "../config.js";
+
+const ProfileContainer = ({ username, rewardpoints, cardnumber, onSetProfile, onUpdateCardnumber }) => {
+  const [isInfoFetched, setIsInfoFetched] = useState(false);
   const [showCardUpdate, setShowCardUpdate] = useState(false);
   const [newCardnumber, setNewCardnumber] = useState('');
   const [isError, setError] = useState(false);
 
+  useEffect(() => {
+    if (!isInfoFetched) {
+      fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/customer/info`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data !== null && data !== undefined) {
+          onSetProfile(data.cardnumber, data.rewardpoints);
+          setIsInfoFetched(true);
+        }
+      });
+    }
+  });
+
   const onSetCardnumber = event => {
     if (newCardnumber.length === 16 && !isNaN(newCardnumber)) {
       setShowCardUpdate(false);
-      onUpdateCardnumber(event, username, newCardnumber);
+      onUpdateCardnumber(event, newCardnumber, rewardpoints);
     } else {
       setError(true);
       setNewCardnumber('');
@@ -49,9 +71,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  onUpdateCardnumber: (event, username, cardnumber) => {
+  onUpdateCardnumber: (event, cardnumber, rewardpoints) => {
     event.preventDefault();
-    dispatch(updateCardnumber(username, cardnumber));
+    dispatch(updateCardnumber(cardnumber, rewardpoints));
+  },
+  onSetProfile: (cardnumber, rewardpoints) => {
+    dispatch(setProfile(cardnumber, rewardpoints));
   }
 });
 

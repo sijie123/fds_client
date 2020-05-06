@@ -5,7 +5,7 @@ import FoodCard from '../components/FoodCard';
 
 import '../stylesheets/style.css';
 
-const Restaurant = ({ restaurant, food, onAddToCart }) => (
+const Restaurant = ({ restaurant, food, onViewReviews, onAddToCart }) => (
   <div className="page">
     <Card>
     <Card.Img className="restaurantImage" variant="top" src={require("../images/food.jpg")} fluid="true" />
@@ -15,7 +15,7 @@ const Restaurant = ({ restaurant, food, onAddToCart }) => (
       </Card.ImgOverlay>
     </Card>
     <CardGroup className="verticalList">
-      {food.map((f, key) => <FoodCard key={'f_' + key} food={f} onAddToCart={e => onAddToCart(e, restaurant.name, f)} />)}
+      {food.map((f, key) => <FoodCard key={'f_' + key} food={f} onViewReviews={e => onViewReviews(e, f)} onAddToCart={e => onAddToCart(e, restaurant.name, f)} />)}
     </CardGroup>
   </div>
 );

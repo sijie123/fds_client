@@ -141,6 +141,15 @@ html, body, #root {
   margin-right: 3em;
 }
 
+.horizontalMargin2 {
+  margin-left: 3rem;
+  margin-right: 3rem;
+}
+
+.rightMargin {
+  margin-right: 3em;
+}
+
 .allMargin {
   margin: 2rem 3rem 2rem 3rem;
 }
@@ -149,13 +158,16 @@ html, body, #root {
   margin: 0 3rem 2rem 3rem;
 }
 
-
 .leftMargin {
   margin-left: 1rem;
 }
 
 .topMargin {
   margin-top: 1rem;
+}
+
+.bottomMargin {
+  margin-bottom: 1rem;
 }
 
 .searchBar {

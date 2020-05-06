@@ -8,6 +8,7 @@ import Signup from '../components/Signup';
 const SignupContainer = ({ isLoggedIn, authenticateFail, onSignup }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("Customer");
 
   if (isLoggedIn) {
     return <Redirect to='/' />;
@@ -17,7 +18,8 @@ const SignupContainer = ({ isLoggedIn, authenticateFail, onSignup }) => {
     <Signup 
       onChangeUsername={e => setUsername(e.target.value)}
       onChangePassword={e => setPassword(e.target.value)}
-      onSignup={e => onSignup(e, username, password)}
+      onChangeRole={e => setRole(e.target.value)}
+      onSignup={e => onSignup(e, username, password, role)}
       isAuthenticateFail={authenticateFail === 'signup'}
     />
   );
@@ -29,9 +31,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  onSignup: (event, username, password) => {
+  onSignup: (event, username, password, role) => {
     event.preventDefault();
-    dispatch(signup(username, password));
+    dispatch(signup(username, password, role));
     ownProps.history.push('/');
   }
 });

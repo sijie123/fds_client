@@ -6,6 +6,8 @@ import { addToCart, setCurrentRestaurant } from '../actions';
 
 import Restaurant from '../components/Restaurant'; 
 
+import config from "../config";
+
 class RestaurantContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -14,15 +16,19 @@ class RestaurantContainer extends React.Component {
       restaurant: null,
       food: null,
       showAlert: false,
-      showSuccess: false
+      showSuccess: false,
+      rating: '',
+      reviews: [],
+      showReviews: false
     };
 
+    this.onViewReviews = this.onViewReviews.bind(this);
     this.onCheckAddToCart = this.onCheckAddToCart.bind(this);
   }
 
   componentDidMount() {
     const restaurant = this.props.restaurants[this.props.match.params.id];
-    fetch(`http://54.169.81.205:3001/restaurant/${restaurant.name}/food`, {
+    fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/restaurant/${restaurant.name}/food`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
@@ -34,6 +40,17 @@ class RestaurantContainer extends React.Component {
         food: data.food
       })
     );
+  }
+
+  onViewReviews(event, food) {
+    event.preventDefault();
+    if (food !== null && 'avgrating' in food && 'countrating' in food) {
+      this.setState({ rating: parseFloat(food.avgrating).toFixed(2) + ' (' + food.countrating + ' reviews)'});
+      if ('reviews' in food) {
+        this.setState({ reviews: food.reviews });
+      }
+      this.setState({ showReviews: true });
+    }
   }
 
   onCheckAddToCart(event, restaurant, food) {
@@ -69,7 +86,14 @@ class RestaurantContainer extends React.Component {
         <Modal show={this.state.showSuccess} onHide={() => this.setState({ showSuccess: false })}>
           <Modal.Header className="successModal" closeButton>Added To Cart!</Modal.Header>
         </Modal>
-        <Restaurant restaurant={this.state.restaurant} food={this.state.food} onAddToCart={this.onCheckAddToCart} />
+        <Modal centered show={this.state.showReviews} onHide={() => this.setState({ showReviews: false })}>
+          <Modal.Header className="updateModal">Reviews</Modal.Header>
+          <Modal.Body className="allMargin">
+            {this.state.rating !== '' ? <p><strong>Average Rating: {this.state.rating}</strong></p> : null}
+            {this.state.reviews.map(c => <p key={'review_' + c}><em>"{c}"</em></p>)}
+          </Modal.Body>
+        </Modal>
+        <Restaurant restaurant={this.state.restaurant} food={this.state.food} onViewReviews={this.onViewReviews} onAddToCart={this.onCheckAddToCart} />
       </div>
     );
   }

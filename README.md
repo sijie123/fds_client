@@ -1,68 +1,24 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Introduction
+This is the client-side component of the FDS App.
+The client-side accepts input from the user, sends requests to the server-side component and displays results as updates to the UI.
+The client-side is built using ReactJS and React-Redux.
 
-## Available Scripts
+### Pre-requisites
+You need the following software to run this application.
+1. NodeJS
+  - You need to install NodeJS and NPM. 
+    - Windows users can refer to installation instructions [here](https://www.guru99.com/download-install-node-js.html).
+    - Ubuntu users can refer to installation instructions [here](https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-ubuntu-18-04).
 
-In the project directory, you can run:
+### Deployment Instructions
+1. Checkout this git repository (or unzip the zip file) and enter the folder.
+2. Run `npm install`.
+3. Rename `config.sample.js` to `config.js`. Update the file to use the correct setup for your deployment.
+4. Run `npm start` to start the server-side component.
 
-### `yarn start`
+Refer to the database deployment instructions to setup the database.
+Also refer to the server-side deployment instructions to setup the back-end.
+After setting up all three deployments (front-end, back-end, database), you can begin using the FDS App.
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+### About
+This FDS App is created by Team 57: Lin Si Jie, Jonathan Cheng, Hilda Ang, Ong Ai Hui for the purposes of CS2102.
