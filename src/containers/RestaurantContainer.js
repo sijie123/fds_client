@@ -27,7 +27,13 @@ class RestaurantContainer extends React.Component {
   }
 
   componentDidMount() {
-    const restaurant = this.props.restaurants[this.props.match.params.id];
+    let restaurant;
+    for (let r of this.props.restaurants) {
+      if (r.name === this.props.match.params.id) {
+        restaurant = r;
+        break;
+      }
+    }
     fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/restaurant/${restaurant.name}/food`, {
       method: 'GET',
       headers: {

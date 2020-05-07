@@ -18,7 +18,7 @@ const Home = ({ restaurants, onChangeKeyword, onSearch, onOpenCategories }) => (
       </InputGroup>
     </div>
     <div className="home">
-      {restaurants.map((r, key) => <RestaurantCard key={key} restaurant={r} id={key} />)}
+      {restaurants.map((r, key) => <RestaurantCard key={key} restaurant={r} id={r.name} />)}
     </div>
   </div>
 );

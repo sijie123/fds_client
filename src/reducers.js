@@ -22,7 +22,8 @@ import {
   SET_RESTAURANT_NAME,
   SET_FOOD_STATS,
   SET_ORDER_STATS,
-  SET_PROMO_STATS
+  SET_PROMO_STATS,
+  SET_ORDER_STATUS
 } from './actions';
 
 const persistConfig = {
@@ -47,7 +48,8 @@ const initialState = {
   riderStats: [],
   foodStats: [],
   orderStats: [],
-  promoStats: []
+  promoStats: [],
+  orderStatus: ''
 };
 
 const reducers = (state = initialState, action) => {
@@ -206,6 +208,11 @@ const reducers = (state = initialState, action) => {
         ...state,
         promoStats: action.promoStats
       };
+    case SET_ORDER_STATUS:
+      return {
+        ...state,
+        orderStatus: action.status
+      }
     default:
       return state;
   }

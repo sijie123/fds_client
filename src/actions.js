@@ -20,6 +20,7 @@ export const SET_RESTAURANT_NAME = 'SET_RESTAURANT_NAME';
 export const SET_FOOD_STATS = 'SET_FOOD_STATS';
 export const SET_ORDER_STATS = 'SET_ORDER_STATS';
 export const SET_PROMO_STATS = 'SET_PROMO_STATS';
+export const SET_ORDER_STATUS = 'SET_ORDER_STATUS';
 
 const authenticate = (username, role, rewardpoints=0, cardnumber=null) => ({
   type: AUTHENTICATE,
@@ -171,6 +172,11 @@ const setCurrentOrder = order => ({
   order: order
 });
 
+export const setOrderStatus = status => ({
+  type: SET_ORDER_STATUS,
+  status: status
+});
+
 export const placeOrder = (cart, restaurant, totalPrice, paymentmethod, address, promocode, useRewardPoints) => {
   return dispatch => {
     return fetch(`http://${config.SERVER_IP}:${config.BACKEND_PORT}/order`, {
@@ -184,7 +190,7 @@ export const placeOrder = (cart, restaurant, totalPrice, paymentmethod, address,
           paymentmethod: paymentmethod,
           restaurantname: restaurant,
           foodorder: cart,
-          promocode: "",
+          promocode: promocode,
           rewardpoints: useRewardPoints
         })
       })
@@ -192,6 +198,9 @@ export const placeOrder = (cart, restaurant, totalPrice, paymentmethod, address,
       .then(data => {
         if (!('errors' in data)) {
           dispatch(setCurrentOrder({ cart, restaurant, totalPrice, paymentmethod, address, promocode }));
+          dispatch(setOrderStatus('success'));
+        } else {
+          dispatch(setOrderStatus('fail'));
         }
       });
   }

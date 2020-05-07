@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Modal } from 'react-bootstrap';
 
-import { removeFromCart, clearCart, placeOrder } from '../actions';
+import { removeFromCart, clearCart, placeOrder, setOrderStatus } from '../actions';
 
 import Cart from '../components/Cart';
 
 import config from "../config";
 
-const CartContainer = ({ cardnumber, restaurants, cart, currentRestaurant, onRemoveFromCart, onClearCart, onPlaceOrder }) => {
+const CartContainer = ({ cardnumber, restaurants, cart, currentRestaurant, orderStatus, onRemoveFromCart, onClearCart, onPlaceOrder, onSetOrderStatus }) => {
   const [errorMsg, setErrorMsg] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const [paymentmethod, setPaymentMethod] = useState('CASH');
@@ -97,7 +97,20 @@ const CartContainer = ({ cardnumber, restaurants, cart, currentRestaurant, onRem
         setIsPromosFetched(true);
       });
     }
-  });
+
+    if (orderStatus === 'success') {
+      setShowSuccess(true);
+      setErrorMsg('');
+      setPaymentMethod('');
+      setAddress('');
+      setSelectedPromo('');
+      setRewardPoints(false);
+      onSetOrderStatus('');
+    } else if (orderStatus === 'fail') {
+      setErrorMsg('Delivery currently unavailable.');
+      onSetOrderStatus('');
+    }
+  }, [isHistoryFetched, isLocationsFetched, isPromosFetched, orderStatus, options, onSetOrderStatus]);
 
   const onOrder = (event, totalPrice) => {
     event.preventDefault();
@@ -120,17 +133,6 @@ const CartContainer = ({ cardnumber, restaurants, cart, currentRestaurant, onRem
         cartorder[c] = cart[c].quantity;
       }
       onPlaceOrder(cartorder, currentRestaurant, totalPrice, paymentmethod, address, selectedPromo, useRewardPoints);
-
-      if (currentRestaurant === '') {
-        setShowSuccess(true);
-        setErrorMsg('');
-        setPaymentMethod('');
-        setAddress('');
-        setSelectedPromo('');
-        setRewardPoints(false);
-      } else {
-        setErrorMsg('Delivery currently unavailable.');
-      }
     }
   }
 
@@ -168,7 +170,8 @@ const mapStateToProps = state => ({
   cardnumber: state.user.cardnumber,
   restaurants: state.restaurants,
   cart: state.cart,
-  currentRestaurant: state.currentRestaurant
+  currentRestaurant: state.currentRestaurant,
+  orderStatus: state.orderStatus
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -180,8 +183,11 @@ const mapDispatchToProps = dispatch => ({
     event.preventDefault();
     dispatch(clearCart());
   },
-  onPlaceOrder: (cart, restaurant, totalPrice, paymentmethod, address) => {
-    dispatch(placeOrder(cart, restaurant, totalPrice, paymentmethod, address));
+  onPlaceOrder: (cart, restaurant, totalPrice, paymentmethod, address, selectedPromo, useRewardPoints) => {
+    dispatch(placeOrder(cart, restaurant, totalPrice, paymentmethod, address, selectedPromo, useRewardPoints));
+  },
+  onSetOrderStatus: status => {
+    dispatch(setOrderStatus(status));
   }
 });
 

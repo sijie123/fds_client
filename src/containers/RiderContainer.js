@@ -21,10 +21,10 @@ const RiderContainer = ({ status, riderStats, onUpdateRiderStatus }) => {
 
   return (
     <div className="page">
-      {status === 'none' &&
+      {status === 'none' ||
         <div>
           <h1 className="allMargin">Current Order</h1>
-          {status === 'none' &&
+          {status === 'departure' &&
             <Button className="horizontalMargin" variant="danger" type="submit" onClick={() => onUpdateRiderStatus('arrival')}>
               Departing To Restaurant
             </Button>
@@ -63,7 +63,7 @@ const RiderContainer = ({ status, riderStats, onUpdateRiderStatus }) => {
       {stats !== null && stats.hasOwnProperty('suminterval') ? <p className="horizontalMargin"><strong>Total Hours Worked:</strong> {stats.suminterval}</p> : null}
       {stats !== null && stats.hasOwnProperty('salary') ? <p className="horizontalMargin"><strong>Total Salary:</strong> {stats.salary}</p> : null}
       {stats !== null && stats.hasOwnProperty('avginterval') ? <p className="horizontalMargin"><strong>Average Delivery Time:</strong> {stats.avginterval}</p> : null}
-      {stats !== null && stats.hasOwnProperty('sumrating') ? <p className="horizontalMargin"><strong>Number of Ratings Received:</strong> {stats.sumrating}</p> : null}
+      {stats !== null && stats.hasOwnProperty('countrating') ? <p className="horizontalMargin"><strong>Number of Ratings Received:</strong> {stats.countrating}</p> : null}
       {stats !== null && stats.hasOwnProperty('avgrating') ? <p className="horizontalMargin"><strong>Average Rating:</strong> {stats.avgrating}</p> : null}
     </div>
   );
