@@ -87,6 +87,10 @@ const StaffContainer = ({ rname, foodStats, orderStats, promoStats, onFetchFoodS
         </Button>
       </Form>
       {monthlyPromoStats !== null && monthlyPromoStats.hasOwnProperty('runtime') && monthlyPromoStats.runtime.hasOwnProperty('months') ? <p className="horizontalMargin"><strong>Duration:</strong> {monthlyPromoStats.runtime.months * 30} days</p> : null}
+      {monthlyPromoStats !== null && monthlyPromoStats.hasOwnProperty('usecount')
+        ? <p className="horizontalMargin"><strong>Use Count:</strong> {monthlyPromoStats.usecount}</p>
+        : null
+      }
       {monthlyPromoStats !== null && monthlyPromoStats.hasOwnProperty('runtime') && monthlyPromoStats.runtime.hasOwnProperty('months') && monthlyPromoStats.hasOwnProperty('usecount')
         ? <p className="horizontalMargin"><strong>Average Order:</strong> {monthlyPromoStats.usecount / (monthlyPromoStats.runtime.months * 30)}</p>
         : null
